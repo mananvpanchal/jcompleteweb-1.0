@@ -3,33 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.integ.jcompleteweb.filters;
 
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 /**
  *
  * @author manan
  */
-public class CORSFilter implements Filter {
-    
-    Logger LOG=Logger.getLogger("mylogger");
+public class DispatchFilter implements Filter {
+
+    Logger LOG = Logger.getLogger("mylogger");
 
     private FilterConfig filterConfig = null;
-    
-    public CORSFilter() {
-        
-    }    
+
+    public DispatchFilter() {
+
+    }
 
     /**
      *
@@ -42,20 +44,22 @@ public class CORSFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest req=(HttpServletRequest)request;
-        if(req.getMethod().equals("OPTIONS")) {
-            ((HttpServletResponse)response).setHeader("Access-Control-Allow-Origin", "*");
-            ((HttpServletResponse)response).setHeader("Access-Control-Allow-Headers", "Content-type");
-            ((HttpServletResponse)response).setHeader("Access-Control-Allow-Methods", "PUT, GET, DELETE, POST, HEAD");
-        } else {
-            ((HttpServletResponse)response).setHeader("Access-Control-Allow-Origin", "*");
-        }
-        chain.doFilter(request, response);
+        /*LOG.info(((HttpServletRequest) request).getRequestURL().toString());
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String path = httpServletRequest.getServletPath();
+        if ((!path.contains("webresources") && path.endsWith(".jcw")) || !path.endsWith(".html")) {
+            path=path.substring(0, path.indexOf(".jcw"))+".html";
+            RequestDispatcher dispatcher = httpServletRequest.getRequestDispatcher(path);
+            dispatcher.forward(request, response);
+        } else {*/
+            chain.doFilter(request, response);
+        //}
     }
 
     /**
      * Return the filter configuration object for this filter.
-     * @return 
+     *
+     * @return
      */
     public FilterConfig getFilterConfig() {
         return (this.filterConfig);
@@ -74,15 +78,16 @@ public class CORSFilter implements Filter {
      * Destroy method for this filter
      */
     @Override
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
      * Init method for this filter
+     *
      * @param filterConfig
      */
     @Override
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
     }
 
@@ -92,12 +97,12 @@ public class CORSFilter implements Filter {
     @Override
     public String toString() {
         if (filterConfig == null) {
-            return ("CORSFilter()");
+            return ("DispatchFilter()");
         }
-        StringBuffer sb = new StringBuffer("CORSFilter(");
+        StringBuffer sb = new StringBuffer("DispatchFilter(");
         sb.append(filterConfig);
         sb.append(")");
         return (sb.toString());
     }
-    
+
 }

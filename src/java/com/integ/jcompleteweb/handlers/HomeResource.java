@@ -21,7 +21,7 @@ import javax.ws.rs.core.MediaType;
  * @author manan
  */
 
-@Path("home2")
+@Path("home5")
 public class HomeResource {
     
     static Logger LOG=Logger.getLogger("mylogger");

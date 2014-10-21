@@ -3,43 +3,50 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.integ.jcompleteweb.handlers;
 
 import com.integ.jcompleteweb.model.JWToken;
+import com.integ.jcompleteweb.oauth.OAuth;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author manan
  */
-
-@Path("{path}")
+@Path("{path}.html")
 public class ResourceHandler {
-    
-    static Logger LOG=Logger.getLogger("mylogger");
-    
-    @Context HttpServletRequest request;
-    @Context HttpServletResponse response;
-    
+
+    static Logger LOG = Logger.getLogger("mylogger");
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String handleResource(JWToken token, @PathParam("path") String path) throws Exception{
-        LOG.info("Path:"+path);
-        if(!path.contains(".html")) {
-            
+    public String handleResource(JWToken token, @PathParam("path") String path) throws Exception {
+        LOG.log(Level.INFO, "ResourceHandler POST path: {0}", path);
+        if (isPageRequiredAuthentication(path)) {
+            if (OAuth.validateAccessToken(token)) {
+                return "success";
+            } else {
+                return "failure";
+            }
         } else {
+            return "success";
         }
-        return "success";
+    }
+
+    public boolean isPageRequiredAuthentication(String page) {
+        if (page.equals("login")) {
+            return false;
+        } else if (page.equals("home")) {
+            return true;
+        }
+        return false;
     }
 }

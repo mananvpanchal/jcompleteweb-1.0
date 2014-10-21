@@ -22,7 +22,7 @@ import javax.crypto.Cipher;
  */
 public class OAuth {
     
-    static Logger LOG=Logger.getLogger("mylogger");
+    //static Logger LOG=Logger.getLogger("mylogger");
 
     protected static HashMap<String, String> userTokenMap = new HashMap<>();
     protected static KeyPair keyPair;
@@ -33,29 +33,23 @@ public class OAuth {
             generator.initialize(2048);
             keyPair = generator.genKeyPair();
         } catch (NoSuchAlgorithmException ex) {
-            LOG.log(Level.SEVERE, "Exception", ex);
+            //LOG.log(Level.SEVERE, "Exception", ex);
         }
     }
     
     public static String encryptData(String data) throws Exception {
-        LOG.info("Plain data: "+data);
         Cipher cipher=Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublic());
         byte[] cipherData=cipher.doFinal(data.getBytes());
-        LOG.info("Cipher data: "+new String(cipherData));
         String cipherStr= Base64.encode(cipherData);
-        LOG.info("Enoded data: "+cipherStr);
         return cipherStr;
     }
     
     public static String decryptData(String data) throws Exception {
-        LOG.info("Enoded data: "+data);
         byte[] cipherData=Base64.decode(data.getBytes());
-        LOG.info("Cipher data: "+new String(cipherData));
         Cipher cipher=Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivate());
         byte[] plainData=cipher.doFinal(cipherData);
-        LOG.info("Plain data: "+new String(plainData));
         return new String(plainData);
     }
     
@@ -70,6 +64,7 @@ public class OAuth {
     }
     
     public static boolean validateAccessToken(JWToken token) throws Exception {
+        if(token==null || token.getAccessToken()==null || token.getAccessToken().equals("")) return false;
         return validateAccessToken(decryptData(token.getUsername()), decryptData(token.getAccessToken()));
     }
 

@@ -9,10 +9,11 @@ and open the template in the editor.
         <title>Home</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="../javascript/jquery-1.11.1.min.js"></script>
-        <script src="../javascript/cookie.js"></script>
+        <script src="javascript/jquery-1.11.1.min.js"></script>
+        <script src="javascript/jcompleteweb.js"></script>
         <script>
             $(document).ready(function () {
+                checkAuthorization("home.html");
                 $("#test").click(function () {
                     var jwt=JSON.parse(decodeURIComponent(getCookie("JWToken")));
                     alert(JSON.stringify(jwt));
