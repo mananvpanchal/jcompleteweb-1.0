@@ -6,15 +6,11 @@
 
 package com.integ.jcompleteweb.handlers;
 
-import com.integ.jcompleteweb.exception.ApplicationException;
-import com.integ.jcompleteweb.model.Credentials;
 import com.integ.jcompleteweb.model.JWToken;
 import com.integ.jcompleteweb.oauth.OAuth;
-import com.sun.xml.messaging.saaj.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

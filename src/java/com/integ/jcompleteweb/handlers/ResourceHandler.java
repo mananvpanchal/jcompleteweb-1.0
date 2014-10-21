@@ -11,14 +11,12 @@ import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Request;
 
 /**
  *
@@ -39,8 +37,8 @@ public class ResourceHandler {
     public String handleResource(JWToken token, @PathParam("path") String path) throws Exception{
         LOG.info("Path:"+path);
         if(!path.contains(".html")) {
-            //Response already committed error here
-            //response.sendRedirect(path+".html");
+            
+        } else {
         }
         return "success";
     }

@@ -9,8 +9,8 @@ and open the template in the editor.
         <title>Login</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="javascript/jquery-1.11.1.min.js"></script>
-        <script src="javascript/cookie.js"></script>
+        <script src="../javascript/jquery-1.11.1.min.js"></script>
+        <script src="../javascript/cookie.js"></script>
         <script>
             $(document).ready(function () {
                 $("#login").click(function () {
@@ -23,7 +23,7 @@ and open the template in the editor.
                         dataType: "text",
                         data: JSON.stringify(cred),
                         type: "POST", 
-                        url: "webresources/dologin",
+                        url: "../webresources/dologin",
                         success: function(data, status, xhr) {
                             var jwt=JSON.parse(data);
                             setCookie("JWToken", encodeURIComponent(JSON.stringify(jwt)), 2);
@@ -35,7 +35,7 @@ and open the template in the editor.
                     });
                 });
                 
-                $("#home").click(function () {
+                $("#home_link").click(function () {
                     var jwt=JSON.parse(decodeURIComponent(getCookie("JWToken")));
                     alert(JSON.stringify(jwt));
                     $.ajax({
@@ -43,11 +43,13 @@ and open the template in the editor.
                         dataType: "text",
                         data: JSON.stringify(jwt),
                         type: "POST", 
-                        url: "webresources/home",
+                        url: "../webresources/home",
                         success: function(data, status, xhr) {
                             alert(data);
+                            window.location.href="home.html";
                         },
                         error: function(xhr, status, error) {
+                            alert(xhr.responseText);
                             alert("Error: " + status + ": " + error);
                         }
                     });
@@ -61,6 +63,7 @@ and open the template in the editor.
             <label for="password">Password</label><input type="password" id="password" name="password"/>
             <input type="button" id="login" value="Login"/>
             <input type="button" id="home" value="Home"/>
+            <a id="home_link" href="#">Home</a>
         </form>
     </body>
 </html>
