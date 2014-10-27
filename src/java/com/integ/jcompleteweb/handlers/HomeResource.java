@@ -7,8 +7,6 @@
 package com.integ.jcompleteweb.handlers;
 
 import com.integ.jcompleteweb.model.JWToken;
-import com.integ.jcompleteweb.oauth.OAuth;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -30,7 +28,7 @@ public class HomeResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
     public String test(JWToken token) {
-        try {
+        /*try {
             if(OAuth.validateAccessToken(token)) {                
                 return "success";
             } else {
@@ -39,7 +37,7 @@ public class HomeResource {
         } catch (Exception ex) {
             LOG.log(Level.SEVERE, "Exception", ex);
             //throw new ApplicationException(ex.getMessage(), ex);
-        }
+        }*/
         return "failure";
     }
 }

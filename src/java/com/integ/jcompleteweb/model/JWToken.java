@@ -6,13 +6,21 @@
 
 package com.integ.jcompleteweb.model;
 
-import com.sun.xml.messaging.saaj.util.Base64;
+import java.util.Date;
 
 /**
  *
  * @author manan
  */
 public class JWToken {
+
+    public Date getExpirationTime() {
+        return expirationTime;
+    }
+
+    public void setExpirationTime(Date expirationTime) {
+        this.expirationTime = expirationTime;
+    }
     
     public String getUsername() {
         return username;
@@ -41,6 +49,7 @@ public class JWToken {
     protected String username;
     protected String userrole;
     protected String accessToken;
+    protected Date expirationTime;
     
     @Override
     public String toString() {

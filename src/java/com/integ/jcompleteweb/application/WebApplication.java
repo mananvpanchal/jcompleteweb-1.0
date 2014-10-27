@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.integ.jcompleteweb.application;
 
-import com.integ.jcompleteweb.oauth.OAuth;
-import com.integ.jcompleteweb.handlers.AuthenticationHandler;
+import com.integ.jcompleteweb.oauth2.AuthorizationServer;
+import com.integ.jcompleteweb.oauth2.OAuthFactory;
+import com.integ.jcompleteweb.oauth2.ResourceOAuth;
 import java.util.Set;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
@@ -18,18 +18,23 @@ import javax.ws.rs.core.Application;
  */
 @ApplicationPath("webresources")
 public class WebApplication extends Application {
-    
+
     public WebApplication() {
-        OAuth.init();
+        try {
+            OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).init();
+            OAuthFactory.getInstance().getResourceOAuth(ResourceOAuth.class).init();
+        } catch (Exception ex) {
+
+        }
     }
-    
+
     @Override
     public Set<Class<?>> getClasses() {
         Set<Class<?>> resources = new java.util.HashSet<>();
         addRestResourceClasses(resources);
         return resources;
     }
-    
+
     private void addRestResourceClasses(Set<Class<?>> resources) {
         resources.add(com.integ.jcompleteweb.exception.ApplicationExceptionMapper.class);
         resources.add(com.integ.jcompleteweb.handlers.AuthenticationHandler.class);

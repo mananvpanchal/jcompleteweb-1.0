@@ -6,7 +6,9 @@
 package com.integ.jcompleteweb.handlers;
 
 import com.integ.jcompleteweb.model.JWToken;
-import com.integ.jcompleteweb.oauth.OAuth;
+import com.integ.jcompleteweb.oauth2.OAuth;
+import com.integ.jcompleteweb.oauth2.OAuthFactory;
+import com.integ.jcompleteweb.oauth2.ResourceServer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
@@ -31,7 +33,7 @@ public class ResourceHandler {
     public String handleResource(JWToken token, @PathParam("path") String path) throws Exception {
         LOG.log(Level.INFO, "ResourceHandler POST path: {0}", path);
         if (isPageRequiredAuthentication(path)) {
-            if (OAuth.validateAccessToken(token)) {
+            if (OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(token).equals(OAuth.TOKEN_SUCCEED)) {
                 return "success";
             } else {
                 return "failure";

@@ -9,7 +9,8 @@ package com.integ.jcompleteweb.handlers;
 import com.integ.jcompleteweb.exception.ApplicationException;
 import com.integ.jcompleteweb.model.Credentials;
 import com.integ.jcompleteweb.model.JWToken;
-import com.integ.jcompleteweb.oauth.OAuth;
+import com.integ.jcompleteweb.oauth2.AuthorizationServer;
+import com.integ.jcompleteweb.oauth2.OAuthFactory;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -30,7 +31,7 @@ public class AuthenticationHandler {
     public JWToken doLogin(Credentials credentials) throws ApplicationException {
         try {
             //throw new Exception("hello");
-            return OAuth.generateJWToken(credentials.getUsername(), "ADMIN");
+            return OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).generateJWToken(credentials.getUsername(), "ADMIN");
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage(), ex);
         }
