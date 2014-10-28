@@ -6,9 +6,9 @@
 package com.integ.jcompleteweb.handlers;
 
 import com.integ.jcompleteweb.model.JWToken;
-import com.integ.jcompleteweb.oauth2.OAuth;
-import com.integ.jcompleteweb.oauth2.OAuthFactory;
-import com.integ.jcompleteweb.oauth2.ResourceServer;
+import com.integ.jcompleteweb.oauth.OAuth;
+import com.integ.jcompleteweb.oauth.OAuthFactory;
+import com.integ.jcompleteweb.oauth.ResourceServer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;

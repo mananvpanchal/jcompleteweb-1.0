@@ -5,10 +5,13 @@
  */
 package com.integ.jcompleteweb.application;
 
-import com.integ.jcompleteweb.oauth2.AuthorizationServer;
-import com.integ.jcompleteweb.oauth2.OAuthFactory;
-import com.integ.jcompleteweb.oauth2.ResourceOAuth;
+import com.integ.jcompleteweb.oauth.AuthorizationServer;
+import com.integ.jcompleteweb.oauth.OAuthFactory;
+import com.integ.jcompleteweb.oauth.ResourceOAuth;
+import com.integ.jcompleteweb.oauth.ResourceServer;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -18,13 +21,15 @@ import javax.ws.rs.core.Application;
  */
 @ApplicationPath("webresources")
 public class WebApplication extends Application {
+    
+    private static final Logger LOG=Logger.getLogger("JCW_LOGGER");
 
     public WebApplication() {
         try {
             OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).init();
-            OAuthFactory.getInstance().getResourceOAuth(ResourceOAuth.class).init();
+            OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).init();
         } catch (Exception ex) {
-
+            LOG.log(Level.SEVERE, "Exception occurred", ex);
         }
     }
 

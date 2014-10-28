@@ -63,7 +63,7 @@ function gotoPage(page) {
     var jsonObj;
     var jwtStr=getCookie("JWToken");
     if(jwtStr===null || jwtStr==="") {
-        jwtStr = "{\"username\":\"\", \"userrole\":\"\", \"accessToken\":\"\"}";
+        jwtStr = "{\"username\":\"\", \"userrole\":\"\", \"accessToken\":\"\", \"expirationTime\":\"\"}";
     }
     var jwt = JSON.parse(jwtStr);
     $.ajax({
@@ -90,7 +90,7 @@ function gotoPage(page) {
 function checkAuthorization(page) {
     var jwtStr=getCookie("JWToken");
     if(jwtStr===null || jwtStr==="") {
-        jwtStr = "{\"username\":\"\", \"userrole\":\"\", \"accessToken\":\"\"}";
+        jwtStr = "{\"username\":\"\", \"userrole\":\"\", \"accessToken\":\"\", \"expirationTime\":\"\"}";
     }
     var jwt = JSON.parse(jwtStr);
     $.ajax({

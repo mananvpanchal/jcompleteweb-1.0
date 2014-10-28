@@ -6,19 +6,20 @@
 
 package com.integ.jcompleteweb.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author manan
  */
-public class JWToken {
+public class JWToken implements Serializable {
 
-    public Date getExpirationTime() {
+    public String getExpirationTime() {
         return expirationTime;
     }
 
-    public void setExpirationTime(Date expirationTime) {
+    public void setExpirationTime(String expirationTime) {
         this.expirationTime = expirationTime;
     }
     
@@ -49,7 +50,7 @@ public class JWToken {
     protected String username;
     protected String userrole;
     protected String accessToken;
-    protected Date expirationTime;
+    protected String expirationTime;
     
     @Override
     public String toString() {

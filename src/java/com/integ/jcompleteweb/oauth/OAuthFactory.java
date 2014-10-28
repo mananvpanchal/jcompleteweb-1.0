@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.integ.jcompleteweb.oauth2;
+package com.integ.jcompleteweb.oauth;
 
 /**
  *
