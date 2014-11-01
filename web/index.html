@@ -4,13 +4,82 @@ To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates
 and open the template in the editor.
 -->
-<html>
+<html ng-app="testApp">
     <head>
-        <title>TODO supply a title</title>
+        <title>Application</title>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="javascript/angular.min.js"></script>
+        <script src="javascript/angular-route.min.js"></script>
+        <script>
+            var jwToken = null;
+            var testApp = angular.module("testApp", ["ngRoute"]);
+
+            testApp.factory("$tokenHolder", function() {
+                //alert("TokenHolder");
+                return {
+                    jwToken : null,
+                    setToken : function(token) {
+                        this.jwToken = token;
+                    },
+                    getToken : function() {
+                        return this.jwToken;
+                    }
+                };
+            });
+
+            testApp.factory("myHttpInterceptor", ["$q", "$tokenHolder", function(q, tokenHolder) {
+                    //alert("Interceptor");
+                    return {
+                        "request": function(config) {
+                        //alert(JSON.stringify(config));
+                        config.headers.jwtoken = JSON.stringify(tokenHolder.getToken());
+                       // alert(JSON.stringify(config));
+                        return config;
+                    }
+                };
+            }]);
+
+            testApp.config(["$routeProvider", "$httpProvider", function(routeProvider, httpProvider) {
+                    httpProvider.interceptors.push("myHttpInterceptor");
+                    routeProvider.
+                            when("/", {
+                                templateUrl: "templates/login.html",
+                                controller: "LoginCtrl"
+                            }).
+                            when("/home", {
+                                templateUrl: "templates/home.html",
+                                controller: "HomeCtrl"
+                            }).
+                            otherwise({
+                                redirectTo: "/"
+                            });
+                }]);
+            testApp.controller("LoginCtrl", ["$scope", "$http", "$location", "$tokenHolder", function(scope, http, location, tokenHolder) {
+                    //alert("Login Controller");
+                    scope.doLogin = function(username, password) {
+                        var cred = {
+                            "username": username,
+                            "password": password
+                        };
+                        http.post("webresources/dologin", cred).
+                                success(function(data) {
+                                    tokenHolder.setToken(data);
+                                    alert("success login");
+                                    location.path("/home");
+                                }).
+                                error(function(data, status) {
+                                    alert(status);
+                                });
+                    };
+                }]);
+            testApp.controller("HomeCtrl", ["$scope", "$http", "$tokenHolder", function(scope, http, tokenHolder) {
+                    scope.doWork = function() {
+                       alert(JSON.stringify(tokenHolder.getToken()));
+                    };
+                }]);</script>
     </head>
     <body>
-        <div>TODO write content</div>
+        <div ng-view></div>
     </body>
 </html>

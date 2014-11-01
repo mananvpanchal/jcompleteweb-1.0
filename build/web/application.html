@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html ng-app="testApp">
+    <head>
+        <title>Application</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="javascript/angular.min.js"></script>
+        <script src="javascript/angular-route.min.js"></script>
+        <script>
+            var testApp = angular.module("testApp", ["ngRoute"]);
+            testApp.config(function($routeProvider) {
+                $routeProvider.
+                when("/", {
+                    templateUrl: "templates/login.html",
+                    controller: "LoginCtrl"
+                }).
+                when("/home", {
+                    templateUrl: "templates/home.html",
+                    controller: "HomeCtrl"
+                }).
+                otherwise({
+                    redirectTo: "/"
+                });           
+            });
+            
+            testApp.controller("LoginCtrl", function() {
+                
+            });
+            
+            testApp.controller("HomeCtrl", function() {
+                
+            });
+        </script>
+    </head>
+    <body>
+        <div ng-view></div>
+    </body>
+</html>

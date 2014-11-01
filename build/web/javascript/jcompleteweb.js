@@ -32,11 +32,11 @@ function checkCookie() {
     }
 }
 
-function doLogin() {
+function doLogin(username, password) {
     var jsonObj;
     var cred = {
-        "username": $("#username").val(),
-        "password": $("#password").val()
+        "username": username,
+        "password": password
     };
     $.ajax({
         contentType: "application/json",
@@ -46,7 +46,6 @@ function doLogin() {
         url: "webresources/dologin",
         success: function(data, status, xhr) {
             var jwt = JSON.parse(data);
-            //setCookie("JWToken", encodeURIComponent(JSON.stringify(jwt)), 2);
             setCookie("JWToken", JSON.stringify(jwt), 2);
             jsonObj = jwt;
         },
