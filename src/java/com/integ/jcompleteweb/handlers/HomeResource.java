@@ -6,7 +6,8 @@
 
 package com.integ.jcompleteweb.handlers;
 
-import com.integ.jcompleteweb.model.JWToken;
+import com.integ.jcompleteweb.model.JSONRequest;
+import com.integ.jcompleteweb.model.JSONResponse;
 import java.util.logging.Logger;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -19,25 +20,17 @@ import javax.ws.rs.core.MediaType;
  * @author manan
  */
 
-@Path("home5")
+@Path("restricted/home5")
 public class HomeResource {
     
     static Logger LOG=Logger.getLogger("mylogger");
     
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Produces(MediaType.TEXT_PLAIN)
-    public String test(JWToken token) {
-        /*try {
-            if(OAuth.validateAccessToken(token)) {                
-                return "success";
-            } else {
-                return "failure";
-            }
-        } catch (Exception ex) {
-            LOG.log(Level.SEVERE, "Exception", ex);
-            //throw new ApplicationException(ex.getMessage(), ex);
-        }*/
-        return "failure";
+    @Produces(MediaType.APPLICATION_JSON)
+    public JSONResponse test(JSONRequest request) {
+        JSONResponse response=new JSONResponse();
+        response.setData("Hello "+request.getCriteria());
+        return response;
     }
 }

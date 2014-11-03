@@ -7,19 +7,26 @@
 package com.integ.jcompleteweb.oauth;
 
 import com.integ.jcompleteweb.model.JWToken;
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author manan
  */
 public class AuthorizationServer extends AuthorizationOAuth {
+    
+    private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
     
     @Override
     protected void savePrivateKey(RSAPrivateKey privateKey) throws IOException {
@@ -56,4 +63,5 @@ public class AuthorizationServer extends AuthorizationOAuth {
             }
         }
     }
+    
 }

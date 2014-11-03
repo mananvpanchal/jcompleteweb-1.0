@@ -15,14 +15,20 @@ and open the template in the editor.
             var jwToken = null;
             var testApp = angular.module("testApp", ["ngRoute"]);
 
+            testApp.run(function($rootScope, $templateCache) {
+                $rootScope.$on('$viewContentLoaded', function() {
+                    $templateCache.removeAll();
+                });
+            });
+
             testApp.factory("$tokenHolder", function() {
                 //alert("TokenHolder");
                 return {
-                    jwToken : null,
-                    setToken : function(token) {
+                    jwToken: null,
+                    setToken: function(token) {
                         this.jwToken = token;
                     },
-                    getToken : function() {
+                    getToken: function() {
                         return this.jwToken;
                     }
                 };
@@ -32,23 +38,23 @@ and open the template in the editor.
                     //alert("Interceptor");
                     return {
                         "request": function(config) {
-                        //alert(JSON.stringify(config));
-                        config.headers.jwtoken = JSON.stringify(tokenHolder.getToken());
-                       // alert(JSON.stringify(config));
-                        return config;
-                    }
-                };
-            }]);
+                            //alert(JSON.stringify(config));
+                            config.headers.jwtoken = JSON.stringify(tokenHolder.getToken());
+                             //alert(JSON.stringify(config));
+                            return config;
+                        }
+                    };
+                }]);
 
             testApp.config(["$routeProvider", "$httpProvider", function(routeProvider, httpProvider) {
                     httpProvider.interceptors.push("myHttpInterceptor");
                     routeProvider.
                             when("/", {
-                                templateUrl: "templates/login.html",
+                                templateUrl: "templates/open/login.html",
                                 controller: "LoginCtrl"
                             }).
                             when("/home", {
-                                templateUrl: "templates/home.html",
+                                templateUrl: "templates/restricted/home.html",
                                 controller: "HomeCtrl"
                             }).
                             otherwise({
@@ -74,8 +80,16 @@ and open the template in the editor.
                     };
                 }]);
             testApp.controller("HomeCtrl", ["$scope", "$http", "$tokenHolder", function(scope, http, tokenHolder) {
+                    //alert("Home controller");
                     scope.doWork = function() {
-                       alert(JSON.stringify(tokenHolder.getToken()));
+                        http.post("webresources/restricted/home5", {criteria : "manan"}).
+                                success(function(data) {
+                                    //alert(JSON.stringify(data));
+                                    alert(data.data);
+                                }).
+                                error(function(data, status) {
+                                    alert(status);
+                                });
                     };
                 }]);</script>
     </head>

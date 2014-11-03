@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.integ.jcompleteweb.oauth;
 
 import com.integ.jcompleteweb.model.JWToken;
@@ -16,20 +15,24 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.RSAPublicKeySpec;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author manan
  */
 public class ResourceServer extends ResourceOAuth {
-    
+
+    private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
+
     protected RSAPublicKey readPublicKey(String name) throws Exception {
         BigInteger[] key = readKey(name);
         RSAPublicKeySpec keySpec = new RSAPublicKeySpec(key[0], key[1]);
         KeyFactory fact = KeyFactory.getInstance("RSA");
         return (RSAPublicKey) fact.generatePublic(keySpec);
     }
-    
+
     protected RSAPrivateKey readPrivateKey(String name) throws Exception {
         BigInteger[] key = readKey(name);
         RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(key[0], key[1]);

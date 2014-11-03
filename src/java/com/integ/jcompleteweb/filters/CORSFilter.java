@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CORSFilter implements Filter {
     
-    Logger LOG=Logger.getLogger("mylogger");
+    private static final Logger LOG=Logger.getLogger("JCW_LOGGER");
 
     private FilterConfig filterConfig = null;
     

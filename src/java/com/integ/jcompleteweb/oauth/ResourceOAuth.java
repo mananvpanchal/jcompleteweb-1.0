@@ -66,8 +66,7 @@ public abstract class ResourceOAuth extends OAuth {
 
     public String validateJWToken(JWToken token) throws Exception {
         LOG.log(Level.INFO, "Token validation");
-        EncryptedJWToken encryptedToken = decodeToken(token);
-        token = decryptToken(encryptedToken);
+        token = decryptToken(decodeToken(token));
         try {
             if(tokenMap.get(token.getUsername()) == null) {
                 LOG.log(Level.INFO, "Token need to be retrieved for user: {0}", token.getUsername());
@@ -78,6 +77,7 @@ public abstract class ResourceOAuth extends OAuth {
             return OAuth.TOKEN_NOT_FOUND;
         }
         if (dateFormat.parse(token.getExpirationTime()).before(new Date())) {
+            tokenMap.remove(token.getUsername());
             return OAuth.TOKEN_TIMED_OUT;
         }
         if (token.getAccessToken().equals(tokenMap.get(token.getUsername()).getAccessToken())) {

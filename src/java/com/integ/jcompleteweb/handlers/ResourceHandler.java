@@ -5,50 +5,52 @@
  */
 package com.integ.jcompleteweb.handlers;
 
+import com.google.gson.Gson;
 import com.integ.jcompleteweb.model.JWToken;
 import com.integ.jcompleteweb.oauth.OAuth;
 import com.integ.jcompleteweb.oauth.OAuthFactory;
 import com.integ.jcompleteweb.oauth.ResourceServer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 
 /**
  *
  * @author manan
  */
-@Path("{path}.html")
+@Path("/restricted/{path}.html")
 public class ResourceHandler {
 
-    static Logger LOG = Logger.getLogger("mylogger");
+    private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
 
-    @POST
+    @Context
+    HttpServletRequest request;
+
+    @GET
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.TEXT_PLAIN)
-    public String handleResource(JWToken token, @PathParam("path") String path) throws Exception {
+    public String handleResource(@PathParam("path") String path) throws Exception {
         LOG.log(Level.INFO, "ResourceHandler POST path: {0}", path);
-        if (isPageRequiredAuthentication(path)) {
-            if (OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(token).equals(OAuth.TOKEN_SUCCEED)) {
+        String token = request.getHeader("jwtoken");
+        Gson gson = new Gson();
+        if (token != null && !token.equals("null")) {
+            JWToken jwToken = gson.fromJson(token, JWToken.class);
+            if (OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(jwToken).equals(OAuth.TOKEN_SUCCEED)) {
                 return "success";
             } else {
                 return "failure";
             }
         } else {
-            return "success";
+            return "failure";
         }
     }
 
-    public boolean isPageRequiredAuthentication(String page) {
-        if (page.equals("login")) {
-            return false;
-        } else if (page.equals("home")) {
-            return true;
-        }
-        return false;
-    }
 }

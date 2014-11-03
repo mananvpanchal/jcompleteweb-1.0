@@ -14,6 +14,9 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -24,13 +27,14 @@ import java.util.logging.Logger;
  * @author manan
  */
 public abstract class AuthorizationOAuth extends OAuth {
-    
-    private static final Logger LOG=Logger.getLogger("JCW_LOGGER");
-    
+
+    private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
+    protected Map<String, JWToken> tokenMap = Collections.synchronizedMap(new HashMap<>());
+
     protected SimpleDateFormat dateFormat;
-    
+
     public AuthorizationOAuth() {
-        dateFormat=new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
+        dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
     }
 
@@ -47,11 +51,11 @@ public abstract class AuthorizationOAuth extends OAuth {
         LOG.log(Level.INFO, "Authorization Private Key: {0}", new String(privateKey.getEncoded()));
         LOG.log(Level.INFO, "Keys set up in AuthorizationOAuth");
     }
-    
+
     protected abstract void savePrivateKey(RSAPrivateKey privateKey) throws IOException;
-    
+
     protected abstract void savePublicKey(RSAPublicKey publicKey) throws IOException;
-    
+
     private EncryptedJWToken encryptToken(JWToken token) throws Exception {
         EncryptedJWToken encryptedToken = new EncryptedJWToken();
         encryptedToken.setUsername(encryptData(token.getUsername().getBytes()));
@@ -60,7 +64,7 @@ public abstract class AuthorizationOAuth extends OAuth {
         encryptedToken.setExpirationTime(encryptData(token.getExpirationTime().getBytes()));
         return encryptedToken;
     }
-    
+
     private JWToken encodeToken(EncryptedJWToken encryptedToken) throws Exception {
         JWToken token = new JWToken();
         token.setUsername(new String(encodeData(encryptedToken.getUsername())));
@@ -71,19 +75,22 @@ public abstract class AuthorizationOAuth extends OAuth {
     }
 
     public JWToken generateJWToken(String username, String userrole) throws Exception {
-        JWToken token = new JWToken();
-        token.setUsername(username);
-        token.setUserrole(userrole);
-        String accessToken = UUID.randomUUID().toString();
-        token.setAccessToken(accessToken);
-        Calendar cal=Calendar.getInstance();
-        cal.add(Calendar.MINUTE, 30);
-        token.setExpirationTime(dateFormat.format(cal.getTime()));
-        saveJWToken(token.getUsername(), token);
-        EncryptedJWToken encryptedToken = encryptToken(token);
-        return encodeToken(encryptedToken);
+        if (tokenMap.get(username) == null) {
+            JWToken token = new JWToken();
+            token.setUsername(username);
+            token.setUserrole(userrole);
+            String accessToken = UUID.randomUUID().toString();
+            token.setAccessToken(accessToken);
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MINUTE, 10);
+            token.setExpirationTime(dateFormat.format(cal.getTime()));
+            tokenMap.put(username, token);
+            saveJWToken(token.getUsername(), token);
+            return encodeToken(encryptToken(token));
+        }
+        return encodeToken(encryptToken(tokenMap.get(username)));
     }
 
     protected abstract void saveJWToken(String username, JWToken token) throws Exception;
-    
+
 }

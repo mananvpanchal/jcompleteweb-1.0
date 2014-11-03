@@ -3,9 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package com.integ.jcompleteweb.filters;
 
+import com.google.gson.Gson;
+import com.integ.jcompleteweb.model.JWToken;
+import com.integ.jcompleteweb.oauth.OAuth;
+import com.integ.jcompleteweb.oauth.OAuthFactory;
+import com.integ.jcompleteweb.oauth.ResourceServer;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,12 +26,12 @@ import javax.servlet.http.HttpServletRequest;
  * @author manan
  */
 public class OAuthFilter implements Filter {
-   
+
     private FilterConfig filterConfig = null;
-    private static final Logger LOG=Logger.getLogger("JCW_LOGGER");
-    
+    private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
+
     public OAuthFilter() {
-    }    
+    }
 
     /**
      *
@@ -40,16 +44,41 @@ public class OAuthFilter implements Filter {
      */
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpServletRequest=(HttpServletRequest)request;
-        LOG.log(Level.INFO, "Request URI : {0}", httpServletRequest.getRequestURI());
-        String token=httpServletRequest.getHeader("jwtoken");
-        LOG.log(Level.INFO, "JWToken : {0}", token);
-        chain.doFilter(request, response);
+        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        String token = httpServletRequest.getHeader("jwtoken");
+        Gson gson = new Gson();
+        String requestURI = httpServletRequest.getRequestURI();
+        LOG.log(Level.INFO, requestURI);
+        String contextPath = httpServletRequest.getContextPath();
+        LOG.log(Level.INFO, contextPath);
+        LOG.log(Level.INFO, token);
+        if (requestURI.contains("restricted")) {
+            if (token == null || token.equals("null")) {
+                response.getWriter().print("Resource is restricted");
+            } else {
+                try {
+                    JWToken jwToken = gson.fromJson(token, JWToken.class);
+                    String status = OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(jwToken);
+                    LOG.log(Level.INFO, status);
+                    if (!status.equals(OAuth.TOKEN_SUCCEED)) {
+                        response.getWriter().print("Resource is restricted");
+                    } else {
+                        chain.doFilter(request, response);
+                    }
+                } catch (Exception ex) {
+                    Logger.getLogger(OAuthFilter.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        } else {
+            chain.doFilter(request, response);
+        }
+        //chain.doFilter(request, response);
     }
 
     /**
      * Return the filter configuration object for this filter.
-     * @return 
+     *
+     * @return
      */
     public FilterConfig getFilterConfig() {
         return (this.filterConfig);
@@ -68,15 +97,16 @@ public class OAuthFilter implements Filter {
      * Destroy method for this filter
      */
     @Override
-    public void destroy() {        
+    public void destroy() {
     }
 
     /**
-     * Init method for this filter
+     * init method for this filter
+     *
      * @param filterConfig
      */
     @Override
-    public void init(FilterConfig filterConfig) {        
+    public void init(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;
     }
 
@@ -93,5 +123,5 @@ public class OAuthFilter implements Filter {
         sb.append(")");
         return (sb.toString());
     }
-    
+
 }
