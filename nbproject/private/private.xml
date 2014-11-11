@@ -4,12 +4,11 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/filters/OAuthFilter.java</file>
-            <file>file:/F:/java/NetBeansProject/JCompleteWeb/web/javascript/jcompleteweb.js</file>
-            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/filters/CORSFilter.java</file>
-            <file>file:/F:/java/NetBeansProject/JCompleteWeb/web/templates/home.html</file>
-            <file>file:/F:/java/NetBeansProject/JCompleteWeb/web/templates/login.html</file>
+            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/handlers/AuthenticationHandler.java</file>
+            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/handlers/HomeResource.java</file>
+            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/application/WebApplication.java</file>
+            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/handlers/ResourceHandler.java</file>
             <file>file:/F:/java/NetBeansProject/JCompleteWeb/web/index.html</file>
-            <file>file:/F:/java/NetBeansProject/JCompleteWeb/src/java/com/integ/jcompleteweb/oauth/AuthorizationOAuth.java</file>
         </group>
     </open-files>
 </project-private>

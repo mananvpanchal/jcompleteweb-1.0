@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType;
  * @author manan
  */
 
-@Path("dologin")
+@Path("open/dologin")
 public class AuthenticationHandler {
     
     @POST
