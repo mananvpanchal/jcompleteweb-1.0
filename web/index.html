@@ -68,7 +68,7 @@ and open the template in the editor.
                             "username": username,
                             "password": password
                         };
-                        http.post("webresources/dologin", cred).
+                        http.post("webresources/open/dologin", cred).
                                 success(function(data) {
                                     tokenHolder.setToken(data);
                                     alert("success login");

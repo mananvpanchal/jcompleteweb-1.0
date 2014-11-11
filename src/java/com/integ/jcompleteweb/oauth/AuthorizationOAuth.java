@@ -7,7 +7,6 @@ package com.integ.jcompleteweb.oauth;
 
 import com.integ.jcompleteweb.model.EncryptedJWToken;
 import com.integ.jcompleteweb.model.JWToken;
-import java.io.IOException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -45,16 +44,13 @@ public abstract class AuthorizationOAuth extends OAuth {
         KeyPair keyPair = generator.genKeyPair();
         publicKey = (RSAPublicKey) keyPair.getPublic();
         privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        savePublicKey(publicKey);
-        savePrivateKey(privateKey);
+        saveKeys(publicKey, privateKey);
         LOG.log(Level.INFO, "Authorization Public Key: {0}", new String(publicKey.getEncoded()));
         LOG.log(Level.INFO, "Authorization Private Key: {0}", new String(privateKey.getEncoded()));
         LOG.log(Level.INFO, "Keys set up in AuthorizationOAuth");
     }
 
-    protected abstract void savePrivateKey(RSAPrivateKey privateKey) throws IOException;
-
-    protected abstract void savePublicKey(RSAPublicKey publicKey) throws IOException;
+    protected abstract void saveKeys(RSAPublicKey publicKey, RSAPrivateKey privateKey) throws Exception;
 
     private EncryptedJWToken encryptToken(JWToken token) throws Exception {
         EncryptedJWToken encryptedToken = new EncryptedJWToken();
@@ -75,7 +71,9 @@ public abstract class AuthorizationOAuth extends OAuth {
     }
 
     public JWToken generateJWToken(String username, String userrole) throws Exception {
+        LOG.log(Level.INFO, "checking token map");
         if (tokenMap.get(username) == null) {
+            LOG.log(Level.INFO, "token not found in map");
             JWToken token = new JWToken();
             token.setUsername(username);
             token.setUserrole(userrole);
@@ -84,8 +82,10 @@ public abstract class AuthorizationOAuth extends OAuth {
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.MINUTE, 10);
             token.setExpirationTime(dateFormat.format(cal.getTime()));
+            LOG.log(Level.INFO, "token generated, trying to save");
             tokenMap.put(username, token);
             saveJWToken(token.getUsername(), token);
+            LOG.log(Level.INFO, "token saved");
             return encodeToken(encryptToken(token));
         }
         return encodeToken(encryptToken(tokenMap.get(username)));

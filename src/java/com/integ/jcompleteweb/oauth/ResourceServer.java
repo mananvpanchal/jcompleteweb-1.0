@@ -6,16 +6,14 @@
 package com.integ.jcompleteweb.oauth;
 
 import com.integ.jcompleteweb.model.JWToken;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.ObjectInputStream;
-import java.math.BigInteger;
-import java.security.KeyFactory;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.RSAPrivateKeySpec;
-import java.security.spec.RSAPublicKeySpec;
-import java.util.logging.Level;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.logging.Logger;
 
 /**
@@ -26,41 +24,94 @@ public class ResourceServer extends ResourceOAuth {
 
     private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
 
+    @Override
     protected RSAPublicKey readPublicKey(String name) throws Exception {
-        BigInteger[] key = readKey(name);
-        RSAPublicKeySpec keySpec = new RSAPublicKeySpec(key[0], key[1]);
-        KeyFactory fact = KeyFactory.getInstance("RSA");
-        return (RSAPublicKey) fact.generatePublic(keySpec);
-    }
-
-    protected RSAPrivateKey readPrivateKey(String name) throws Exception {
-        BigInteger[] key = readKey(name);
-        RSAPrivateKeySpec keySpec = new RSAPrivateKeySpec(key[0], key[1]);
-        KeyFactory fact = KeyFactory.getInstance("RSA");
-        return (RSAPrivateKey) fact.generatePrivate(keySpec);
-    }
-
-    private BigInteger[] readKey(String name) throws Exception {
-        ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(new FileInputStream("F:/java/NetBeansProject/" + name)));
-        BigInteger[] key = new BigInteger[2];
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet set = null;
         try {
-            key[0] = (BigInteger) oin.readObject();
-            key[1] = (BigInteger) oin.readObject();
+            RSAPublicKey key = null;
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jcompleteweb", "manan", "12345678");
+            con.setAutoCommit(false);
+            stmt = con.createStatement();
+            set = stmt.executeQuery("select public_key from key_holder");
+            if (set.next()) {
+                ObjectInputStream objectInputStream = new ObjectInputStream(set.getBinaryStream(1));
+                key = (RSAPublicKey) objectInputStream.readObject();
+            }
+            return key;
         } finally {
-            oin.close();
+            if (set != null) {
+                set.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
         }
-        return key;
+    }
+
+    @Override
+    protected RSAPrivateKey readPrivateKey(String name) throws Exception {
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet set = null;
+        try {
+            RSAPrivateKey key = null;
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jcompleteweb", "manan", "12345678");
+            con.setAutoCommit(false);
+            stmt = con.createStatement();
+            set = stmt.executeQuery("select private_key from key_holder");
+            if (set.next()) {
+                ObjectInputStream objectInputStream = new ObjectInputStream(set.getBinaryStream(1));
+                key = (RSAPrivateKey) objectInputStream.readObject();
+            }
+            return key;
+        } finally {
+            if (set != null) {
+                set.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
+        }
     }
 
     @Override
     protected JWToken readJWToken(String username) throws Exception {
-        ObjectInputStream oin = new ObjectInputStream(new BufferedInputStream(new FileInputStream("F:/java/NetBeansProject/" + username)));
-        JWToken token;
+        Connection con = null;
+        PreparedStatement stmt = null;
+        ResultSet set = null;
         try {
-            token = (JWToken) oin.readObject();
+            JWToken token = null;
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/jcompleteweb", "manan", "12345678");
+            con.setAutoCommit(false);
+            stmt = con.prepareStatement("select jwtoken from token_holder where username = ?");
+            stmt.setString(1, username);
+            set = stmt.executeQuery();
+            if (set.next()) {
+                ObjectInputStream objectInputStream = new ObjectInputStream(set.getBinaryStream(1));
+                token = (JWToken) objectInputStream.readObject();
+            }
+            return token;
         } finally {
-            oin.close();
+            if (set != null) {
+                set.close();
+            }
+            if (stmt != null) {
+                stmt.close();
+            }
+            if (con != null) {
+                con.close();
+            }
         }
-        return token;
     }
 }
