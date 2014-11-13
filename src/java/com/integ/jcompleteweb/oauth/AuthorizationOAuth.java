@@ -14,6 +14,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TimeZone;
@@ -69,10 +70,14 @@ public abstract class AuthorizationOAuth extends OAuth {
         token.setExpirationTime(new String(encodeData(encryptedToken.getExpirationTime())));
         return token;
     }
+    
+    protected boolean isTokenTimedOut(JWToken token) throws Exception {
+        return dateFormat.parse(token.getExpirationTime()).before(new Date());
+    }
 
     public JWToken generateJWToken(String username, String userrole) throws Exception {
         LOG.log(Level.INFO, "checking token map");
-        if (tokenMap.get(username) == null) {
+        if (tokenMap.get(username) == null || isTokenTimedOut(tokenMap.get(username))) {
             LOG.log(Level.INFO, "token not found in map");
             JWToken token = new JWToken();
             token.setUsername(username);

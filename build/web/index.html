@@ -1,9 +1,4 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html ng-app="testApp">
     <head>
         <title>Application</title>
@@ -11,6 +6,9 @@ and open the template in the editor.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="javascript/angular.min.js"></script>
         <script src="javascript/angular-route.min.js"></script>
+        <script src="javascript/bootstrap.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
         <script>
             var jwToken = null;
             var testApp = angular.module("testApp", ["ngRoute"]);
@@ -75,7 +73,7 @@ and open the template in the editor.
                                     location.path("/home");
                                 }).
                                 error(function(data, status) {
-                                    alert(status);
+                                    alert("Error: "+data.errorMessage);
                                 });
                     };
                 }]);
