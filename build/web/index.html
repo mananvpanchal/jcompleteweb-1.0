@@ -78,7 +78,6 @@
                     };
                 }]);
             testApp.controller("HomeCtrl", ["$scope", "$http", "$tokenHolder", function(scope, http, tokenHolder) {
-                    //alert("Home controller");
                     scope.doWork = function() {
                         http.post("webresources/restricted/home5", {criteria : "manan"}).
                                 success(function(data) {
