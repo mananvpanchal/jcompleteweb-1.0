@@ -30,8 +30,8 @@ public class AuthenticationHandler {
     @Produces(MediaType.APPLICATION_JSON)
     public JWToken doLogin(Credentials credentials) throws ApplicationException {
         try {
-            //throw new Exception("hello");
-            return OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).generateJWToken(credentials.getUsername(), "ADMIN");
+            throw new Exception("hello");
+            //return OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).generateJWToken(credentials.getUsername(), "ADMIN");
         } catch (Exception ex) {
             throw new ApplicationException(ex.getMessage(), ex);
         }

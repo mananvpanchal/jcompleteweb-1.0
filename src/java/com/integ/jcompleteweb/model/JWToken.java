@@ -7,12 +7,14 @@
 package com.integ.jcompleteweb.model;
 
 import java.io.Serializable;
-import java.util.Date;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
  * @author manan
  */
+
+@XmlRootElement
 public class JWToken implements Serializable {
 
     public String getExpirationTime() {

@@ -26,7 +26,7 @@ public abstract class ResourceOAuth extends OAuth {
     
     private static final Logger LOG=Logger.getLogger("JCW_LOGGER");
     protected SimpleDateFormat dateFormat;
-    protected Map<String, JWToken> tokenMap=Collections.synchronizedMap(new HashMap<>());
+    protected Map<String, JWToken> tokenMap=Collections.synchronizedMap(new HashMap<String, JWToken>());
     
     public ResourceOAuth() {
         dateFormat=new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");

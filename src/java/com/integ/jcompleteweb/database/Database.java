@@ -6,6 +6,7 @@
 package com.integ.jcompleteweb.database;
 
 import com.integ.jcompleteweb.exception.ApplicationException;
+import com.integ.jcompleteweb.properties.PropertiesUtil;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -16,6 +17,8 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /**
  *
@@ -75,12 +78,16 @@ public class Database {
         if (!isClosed()) {
             throw new ApplicationException("close() was not called after previous open()");
         }
-        String driverClassFQN = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/jcompleteweb";
-        String username = "manan";
-        String password = "12345678";
+        InitialContext context=new InitialContext();
+        DataSource dataSource=(DataSource)context.lookup(PropertiesUtil.getProperty("db_datasource"));
+        LOG.log(Level.INFO, PropertiesUtil.getProperty("db_datasource"));
+        /*String driverClassFQN = PropertiesUtil.getProperty("db_driver");
+        String url = PropertiesUtil.getProperty("db_url");
+        String username = PropertiesUtil.getProperty("db_username");
+        String password = PropertiesUtil.getProperty("db_password");
         Class.forName(driverClassFQN);
-        connection = DriverManager.getConnection(url, username, password);
+        connection = DriverManager.getConnection(url, username, password);*/
+        connection=dataSource.getConnection();
         connection.setAutoCommit(false);
         setState(true, false, false, false, false);
     }

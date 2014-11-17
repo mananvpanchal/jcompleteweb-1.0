@@ -54,14 +54,14 @@ public class OAuthFilter implements Filter {
         LOG.log(Level.INFO, token);
         if (requestURI.contains("restricted")) {
             if (token == null || token.equals("null")) {
-                response.getWriter().print("Resource is restricted");
+                response.getWriter().print("{\"data\":\"AUTHENTICATION_FAILED\"}");
             } else {
                 try {
                     JWToken jwToken = gson.fromJson(token, JWToken.class);
                     String status = OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(jwToken);
                     LOG.log(Level.INFO, status);
                     if (!status.equals(OAuth.TOKEN_SUCCEED)) {
-                        response.getWriter().print("Resource is restricted");
+                        response.getWriter().print("{\"data\":\"AUTHENTICATION_FAILED\"}");
                     } else {
                         chain.doFilter(request, response);
                     }

@@ -6,10 +6,14 @@
 
 package com.integ.jcompleteweb.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  *
  * @author manan
  */
+
+@XmlRootElement
 public class JSONRequest {
 
     public String getCriteria() {

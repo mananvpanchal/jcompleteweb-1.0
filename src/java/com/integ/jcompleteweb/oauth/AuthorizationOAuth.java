@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public abstract class AuthorizationOAuth extends OAuth {
 
     private static final Logger LOG = Logger.getLogger("JCW_LOGGER");
-    protected Map<String, JWToken> tokenMap = Collections.synchronizedMap(new HashMap<>());
+    protected Map<String, JWToken> tokenMap = Collections.synchronizedMap(new HashMap<String, JWToken>());
 
     protected SimpleDateFormat dateFormat;
 
@@ -85,7 +85,7 @@ public abstract class AuthorizationOAuth extends OAuth {
             String accessToken = UUID.randomUUID().toString();
             token.setAccessToken(accessToken);
             Calendar cal = Calendar.getInstance();
-            cal.add(Calendar.MINUTE, 10);
+            cal.add(Calendar.MINUTE, 1);
             token.setExpirationTime(dateFormat.format(cal.getTime()));
             LOG.log(Level.INFO, "token generated, trying to save");
             tokenMap.put(username, token);

@@ -6,6 +6,8 @@
 
 package com.integ.jcompleteweb.exception;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -18,12 +20,20 @@ import javax.ws.rs.ext.Provider;
  */
 
 @Provider
-public class ApplicationExceptionMapper implements ExceptionMapper<ApplicationException> {
+public class ApplicationExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
-    public Response toResponse(ApplicationException exception) {
+    public Response toResponse(Exception exception) {
         ApplicationError error=new ApplicationError();
-        error.setErrorMessage(exception.getMessage());
+        error.setMessage(exception.getMessage());
+        ByteArrayOutputStream outputStream=new ByteArrayOutputStream();
+        PrintStream printStream=new PrintStream(outputStream);
+        exception.printStackTrace(printStream);
+        String stackTrace=outputStream.toString();
+        stackTrace=stackTrace.replaceAll("\r\n", "<br/>");
+        stackTrace=stackTrace.replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;");
+        System.out.println(stackTrace);
+        error.setStackTrace(stackTrace);
         return Response.status(Status.INTERNAL_SERVER_ERROR)
                 .entity(error)
                 .type(MediaType.APPLICATION_JSON).build();

@@ -9,6 +9,7 @@ import com.integ.jcompleteweb.oauth.AuthorizationServer;
 import com.integ.jcompleteweb.oauth.OAuthFactory;
 import com.integ.jcompleteweb.oauth.ResourceOAuth;
 import com.integ.jcompleteweb.oauth.ResourceServer;
+import com.integ.jcompleteweb.properties.PropertiesUtil;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +27,7 @@ public class WebApplication extends Application {
 
     public WebApplication() {
         try {
+            PropertiesUtil.loadProperties();
             OAuthFactory.getInstance().getAuthorizationOAuth(AuthorizationServer.class).init();
             OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).init();
         } catch (Exception ex) {
@@ -44,6 +46,5 @@ public class WebApplication extends Application {
         resources.add(com.integ.jcompleteweb.exception.ApplicationExceptionMapper.class);
         resources.add(com.integ.jcompleteweb.handlers.AuthenticationHandler.class);
         resources.add(com.integ.jcompleteweb.handlers.HomeResource.class);
-        resources.add(com.integ.jcompleteweb.handlers.ResourceHandler.class);
     }
 }
