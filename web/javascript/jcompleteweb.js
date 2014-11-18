@@ -4,38 +4,44 @@
  * and open the template in the editor.
  */
 function showErrorDialog(messageText) {
-    $("#modalDialogTitle").html("Error");
+    var dialogTitle=$("#modalDialogTitle");
+    var okButton=$("#modalDialogOkButton");
+    dialogTitle.html("Error");
     $("#modalDialogContent").html(messageText);
-    $("#modalDialogOkButton").addClass("btn btn-danger");
-    $("#modalDialogTitle").css("color", $("#modalDialogOkButton").css("background-color"));
+    okButton.addClass("btn btn-danger");
+    dialogTitle.css("color", okButton.css("background-color"));
     $("#modalDialog").modal();
 }
 
 function showErrorStackTraceDialog(messageText, stackTrace) {
-    $("#modalDialogTitle").html("Error");
+    var dialogTitle=$("#modalDialogTitle");
+    var okButton=$("#modalDialogOkButton");
+    dialogTitle.html("Error");
     var content=$("#modalDialogContent");
     content.html("Message: "+messageText+"<br/><br/> Stack trace:<br/>"+stackTrace);
     content.height(150);
-    $("#modalDialogOkButton").addClass("btn btn-danger");
-    $("#modalDialogTitle").css("color", $("#modalDialogOkButton").css("background-color"));
+    okButton.addClass("btn btn-danger");
+    dialogTitle.css("color", okButton.css("background-color"));
     $("#modalDialog").modal();
 }
 
 function showWarningDialog(messageText) {
-    $("#modalDialogTitle").html("Warning");
-    $("#modalDialogTitle").css("color", $(".btn-warning").css("color"));
+    var dialogTitle=$("#modalDialogTitle");
+    var okButton=$("#modalDialogOkButton");
+    dialogTitle.html("Warning");
     $("#modalDialogContent").html(messageText);
-    $("#modalDialogOkButton").addClass("btn btn-warning");
-    $("#modalDialogTitle").css("color", $("#modalDialogOkButton").css("background-color"));
+    okButton.addClass("btn btn-warning");
+    dialogTitle.css("color", okButton.css("background-color"));
     $("#modalDialog").modal();
 }
 
 function showSuccessDialog(messageText) {
-    $("#modalDialogTitle").html("Success");
-    $("#modalDialogTitle").css("color", $(".btn-warning").css("color"));
+    var dialogTitle=$("#modalDialogTitle");
+    var okButton=$("#modalDialogOkButton");
+    dialogTitle.html("Success");
     $("#modalDialogContent").html(messageText);
-    $("#modalDialogOkButton").addClass("btn btn-success");
-    $("#modalDialogTitle").css("color", $("#modalDialogOkButton").css("background-color"));
+    okButton.addClass("btn btn-success");
+    dialogTitle.css("color", okButton.css("background-color"));
     $("#modalDialog").modal();
 }
 

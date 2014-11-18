@@ -6,11 +6,15 @@
 package com.integ.jcompleteweb.filters;
 
 import com.google.gson.Gson;
+import com.integ.jcompleteweb.exception.ApplicationException;
 import com.integ.jcompleteweb.model.JWToken;
 import com.integ.jcompleteweb.oauth.OAuth;
 import com.integ.jcompleteweb.oauth.OAuthFactory;
 import com.integ.jcompleteweb.oauth.ResourceServer;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;
@@ -20,6 +24,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  *
@@ -45,6 +50,10 @@ public class OAuthFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        httpServletResponse.setHeader("Cache-Control", "private, no-store, no-cache, must-revalidate");
+        httpServletResponse.setHeader("Pragma", "no-cache");
+        httpServletResponse.setDateHeader("Expires", 0);
         String token = httpServletRequest.getHeader("jwtoken");
         Gson gson = new Gson();
         String requestURI = httpServletRequest.getRequestURI();
@@ -61,12 +70,18 @@ public class OAuthFilter implements Filter {
                     String status = OAuthFactory.getInstance().getResourceOAuth(ResourceServer.class).validateJWToken(jwToken);
                     LOG.log(Level.INFO, status);
                     if (!status.equals(OAuth.TOKEN_SUCCEED)) {
-                        response.getWriter().print("{\"data\":\"AUTHENTICATION_FAILED\"}");
+                        if (httpServletRequest.getMethod().equals("GET")) {
+                            response.getWriter().print("Authentication Failed");
+                        } else if (httpServletRequest.getMethod().equals("POST")) {
+                            response.getWriter().print("{\"data\":\"AUTHENTICATION_FAILED\"}");
+                        }
                     } else {
                         chain.doFilter(request, response);
+
                     }
                 } catch (Exception ex) {
                     Logger.getLogger(OAuthFilter.class.getName()).log(Level.SEVERE, null, ex);
+                    ex.printStackTrace(response.getWriter());
                 }
             }
         } else {

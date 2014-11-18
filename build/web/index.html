@@ -8,111 +8,53 @@
         <script src="javascript/angular.min.js"></script>
         <script src="javascript/angular-route.min.js"></script>
         <script src="javascript/bootstrap.min.js"></script>
+        <script src="ng-javascript/app.config.js"></script>
+        <script src="ng-javascript/interceptor.factory.js"></script>
+        <script src="ng-javascript/route.config.js"></script>
+        <script src="ng-javascript/controller.js"></script>
         <script src="javascript/jcompleteweb.js"></script>
         <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
         <script>
-                    var jcWeb = angular.module("jcWeb", ["ngRoute"]);
+            var jcWeb = angular.module("jcWeb", ["ngRoute"]);
 
-                    jcWeb.run(function($rootScope, $templateCache) {
-                        $rootScope.$on('$viewContentLoaded', function() {
-                            $templateCache.removeAll();
-                        });
-                    });
+            jcWeb.run(function($rootScope, $templateCache) {
+                $rootScope.$on("$routeChangeStart", function() {
+                    $templateCache.removeAll();
+                });
+            });
 
-                    jcWeb.factory("$tokenHolder", function() {
-                        return {
-                            jwToken: null,
-                            setToken: function(token) {
-                                this.jwToken = token;
-                            },
-                            getToken: function() {
-                                return this.jwToken;
-                            }
-                        };
-                    });
+            jcWeb.factory("$tokenHolder", function() {
+                return {
+                    jwToken: null,
+                    setToken: function(token) {
+                        this.jwToken = token;
+                    },
+                    getToken: function() {
+                        return this.jwToken;
+                    }
+                };
+            });
 
-                    jcWeb.factory("$pathHolder", function() {
-                        return {
-                            path: null,
-                            setPath: function(path) {
-                                this.path = path;
-                            },
-                            getPath: function() {
-                                return this.path;
-                            }
-                        };
-                    });
+            jcWeb.factory("$pathHolder", function() {
+                return {
+                    path: null,
+                    setPath: function(path) {
+                        this.path = path;
+                    },
+                    getPath: function() {
+                        return this.path;
+                    }
+                };
+            });
 
-                    jcWeb.factory("myHttpInterceptor", ["$tokenHolder", "$pathHolder", function(tokenHolder, pathHolder) {
-                            //alert("Interceptor");
-                            return {
-                                "request": function(request) {
-                                    request.headers.jwtoken = JSON.stringify(tokenHolder.getToken());
-                                    return request;
-                                },
-                                "response": function(response) {
-                                    return response;
-                                }
-                            };
-                        }]);
+            factory_interceptor(jcWeb);
 
-                    jcWeb.config(["$routeProvider", "$httpProvider", function(routeProvider, httpProvider) {
-                            httpProvider.interceptors.push("myHttpInterceptor");
-                            routeProvider.
-                                    when("/", {
-                                        templateUrl: "templates/open/login.html",
-                                        controller: "LoginCtrl"
-                                    }).
-                                    when("/home", {
-                                        templateUrl: "templates/restricted/home.html",
-                                        controller: "HomeCtrl"
-                                    }).
-                                    when("/home2", {
-                                        templateUrl: "templates/restricted/home2.html",
-                                        controller: "HomeCtrl"
-                                    }).
-                                    otherwise({
-                                        redirectTo: "/"
-                                    });
-                        }]);
-                    jcWeb.controller("LoginCtrl", ["$scope", "$http", "$location", "$tokenHolder", "$pathHolder", function(scope, http, location, tokenHolder, pathHolder) { 
-                            scope.doLogin = function(username, password) {
-                                var cred = {
-                                    "username": username,
-                                    "password": password
-                                };
-                                http.post("webresources/open/dologin", cred).
-                                        success(function(data) {
-                                            tokenHolder.setToken(data);
-                                            showSuccessDialog("success login");
-                                            if (pathHolder.getPath() === null) {
-                                                location.path("/home");
-                                            } else {
-                                                location.path(pathHolder.getPath());
-                                            }
-                                        }).
-                                        error(function(data, status) {
-                                            showErrorStackTraceDialog(data.message, data.stackTrace);
-                                        });
-                            };
-                        }]);
-                    jcWeb.controller("HomeCtrl", ["$scope", "$http", "$location", "$tokenHolder", "$pathHolder", function(scope, http, location, tokenHolder, pathHolder) {
-                            scope.doWork = function() {
-                                http.post("webresources/restricted/home", {criteria: "manan"}).
-                                        success(function(data) {
-                                            if (data.data === "AUTHENTICATION_FAILED") {
-                                                pathHolder.setPath(location.path());
-                                                location.path("/");
-                                            } else {
-                                                showSuccessDialog(data.data);
-                                            }
-                                        }).
-                                        error(function(data, status) {
-                                            showErrorStackTraceDialog(data.message, data.stackTrace);
-                                        });
-                            };
-                        }]);</script>
+            configureApp(jcWeb);
+
+            controller(jcWeb);
+
+        </script>
     </head>
     <body>
         <div ng-view></div>
