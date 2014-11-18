@@ -4,8 +4,8 @@
  * and open the template in the editor.
  */
 function showErrorDialog(messageText) {
-    var dialogTitle=$("#modalDialogTitle");
-    var okButton=$("#modalDialogOkButton");
+    var dialogTitle = $("#modalDialogTitle");
+    var okButton = $("#modalDialogOkButton");
     dialogTitle.html("Error");
     $("#modalDialogContent").html(messageText);
     okButton.addClass("btn btn-danger");
@@ -14,11 +14,11 @@ function showErrorDialog(messageText) {
 }
 
 function showErrorStackTraceDialog(messageText, stackTrace) {
-    var dialogTitle=$("#modalDialogTitle");
-    var okButton=$("#modalDialogOkButton");
+    var dialogTitle = $("#modalDialogTitle");
+    var okButton = $("#modalDialogOkButton");
     dialogTitle.html("Error");
-    var content=$("#modalDialogContent");
-    content.html("Message: "+messageText+"<br/><br/> Stack trace:<br/>"+stackTrace);
+    var content = $("#modalDialogContent");
+    content.html("Message: " + messageText + "<br/><br/> Stack trace:<br/>" + stackTrace);
     content.height(150);
     okButton.addClass("btn btn-danger");
     dialogTitle.css("color", okButton.css("background-color"));
@@ -26,8 +26,8 @@ function showErrorStackTraceDialog(messageText, stackTrace) {
 }
 
 function showWarningDialog(messageText) {
-    var dialogTitle=$("#modalDialogTitle");
-    var okButton=$("#modalDialogOkButton");
+    var dialogTitle = $("#modalDialogTitle");
+    var okButton = $("#modalDialogOkButton");
     dialogTitle.html("Warning");
     $("#modalDialogContent").html(messageText);
     okButton.addClass("btn btn-warning");
@@ -36,8 +36,8 @@ function showWarningDialog(messageText) {
 }
 
 function showSuccessDialog(messageText) {
-    var dialogTitle=$("#modalDialogTitle");
-    var okButton=$("#modalDialogOkButton");
+    var dialogTitle = $("#modalDialogTitle");
+    var okButton = $("#modalDialogOkButton");
     dialogTitle.html("Success");
     $("#modalDialogContent").html(messageText);
     okButton.addClass("btn btn-success");

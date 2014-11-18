@@ -7,7 +7,7 @@
 
 function controller(jcWeb) {
     
-    jcWeb.controller("LoginCtrl", ["$scope", "$http", "$location", "$tokenHolder", "$pathHolder", function(scope, http, location, tokenHolder, pathHolder) {
+    jcWeb.controller("LoginCtrl", ["$scope", "$http", "$location", "$tokenHolder", "$pathHolder", "$messageDialogCallbackHolder", function(scope, http, location, tokenHolder, pathHolder, messageDialogCallbackHolder) {
             scope.doLogin = function(username, password) {
                 var cred = {
                     "username": username,
@@ -16,12 +16,14 @@ function controller(jcWeb) {
                 http.post("webresources/open/dologin", cred).
                         success(function(data) {
                             tokenHolder.setToken(data);
+                            messageDialogCallbackHolder.setCallback(function() {
+                                if (pathHolder.getPath() === null) {
+                                    location.path("/home");
+                                } else {
+                                    location.path(pathHolder.getPath());
+                                }
+                            });
                             showSuccessDialog("success login");
-                            if (pathHolder.getPath() === null) {
-                                location.path("/home");
-                            } else {
-                                location.path(pathHolder.getPath());
-                            }
                         }).
                         error(function(data, status) {
                             showErrorStackTraceDialog(data.message, data.stackTrace);
@@ -43,6 +45,12 @@ function controller(jcWeb) {
                         error(function(data, status) {
                             showErrorStackTraceDialog(data.message, data.stackTrace);
                         });
+            };
+        }]);
+    
+    jcWeb.controller("ModalDialogCtrl", ["$scope", "$messageDialogCallbackHolder", function(scope, messageDialogCallbackHolder) {
+            scope.okClicked = function() {
+                messageDialogCallbackHolder["callback"]();
             };
         }]);
 }

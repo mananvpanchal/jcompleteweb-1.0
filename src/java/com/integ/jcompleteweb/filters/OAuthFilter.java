@@ -6,15 +6,11 @@
 package com.integ.jcompleteweb.filters;
 
 import com.google.gson.Gson;
-import com.integ.jcompleteweb.exception.ApplicationException;
 import com.integ.jcompleteweb.model.JWToken;
 import com.integ.jcompleteweb.oauth.OAuth;
 import com.integ.jcompleteweb.oauth.OAuthFactory;
 import com.integ.jcompleteweb.oauth.ResourceServer;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.Filter;

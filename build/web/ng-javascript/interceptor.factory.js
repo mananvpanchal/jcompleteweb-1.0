@@ -9,7 +9,6 @@ function factory_interceptor(jcWeb) {
     jcWeb.factory("httpInterceptor", ["$tokenHolder", function(tokenHolder) {
             return {
                 "request": function(request) {
-                    alert("request fired");
                     request.headers.jwtoken = JSON.stringify(tokenHolder.getToken());
                     return request;
                 },

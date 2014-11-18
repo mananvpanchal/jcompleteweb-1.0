@@ -47,6 +47,18 @@
                     }
                 };
             });
+            
+            jcWeb.factory("$messageDialogCallbackHolder", function() {
+                return {
+                    callback: null,
+                    setCallback: function(callback) {
+                        this.callback=callback;
+                    },
+                    getCallback: function() {
+                        return this.callback;
+                    }
+                };
+            });
 
             factory_interceptor(jcWeb);
 
@@ -61,7 +73,7 @@
 
 
         <!-- Modal -->
-        <div class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="modalDialogTitle" aria-hidden="true">
+        <div ng-controller="ModalDialogCtrl" class="modal fade" id="modalDialog" tabindex="-1" role="dialog" aria-labelledby="modalDialogTitle" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -70,7 +82,7 @@
                     </div>
                     <div class="modal-body" id="modalDialogContent" style="overflow: auto; white-space: nowrap; "></div>
                     <div class="modal-footer">
-                        <button type="button" id="modalDialogOkButton" class="btn btn-default" data-dismiss="modal">OK</button>
+                        <button type="button" id="modalDialogOkButton" class="btn btn-default" data-dismiss="modal" ng-click="okClicked()">OK</button>
                     </div>
                 </div>
             </div>
